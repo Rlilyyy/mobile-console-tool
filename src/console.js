@@ -4,39 +4,31 @@
 
   const DEBUG_CONTAINER_ID = 'debug-container';
 
-  let logs = [],
-      warns = [],
-      errors = [];
+  let logs = [];
 
   let loaded = false;
-  let consoles = ['log', 'warn', 'error'];
+  let consoles = ['log', 'warn', 'info', 'error'];
   let out = {};
 
   for(let value of consoles) {
+
+    console[`_${ value }`] = console[value];
+
     out[value] = (...args) => {
       if (loaded) {
         let item = `<li class="debug-list-item ${ value }">${ args.toString() }</li>`;
         doc.getElementById(DEBUG_CONTAINER_ID).innerHTML += item;
+
       } else {
-        switch (value) {
-          case 'log':
-            logs.push(args);
-            break;
-          case 'warn':
-            warns.push(args);
-            break;
-          case 'error':
-            errors.push(args);
-          default:
-            logs.push(args);
-            break;
-        }
+        logs.push({
+          type: value,
+          msg: args
+        });
       }
     };
-  }
 
-  for(let value of consoles) {
     console[value] = (...args) => {
+      console[`_${ value }`].apply(console, args);
       out[value].apply(root, [...args]);
     };
   }
@@ -56,20 +48,23 @@
   addEventListener(root, 'load', function() {
     loaded = true;
 
-    for(let error of errors) {
-      out.error(error);
+    let log = null;
+    while(log = logs.shift()) {
+      let { type, msg } = log;
+      out[type](msg);
     }
-    for(let log of logs) {
-      out.log(log);
-    }
+    console.log(logs);
   });
 
   addEventListener(root, 'error', function(event) {
-    let { error } = event;
+    let { message } = event;
     if (loaded) {
-      out.error(error);
+      out.error(message);
     } else {
-      errors.push(error);
+      logs.push({
+        type: 'error',
+        msg: message
+      });
     }
   });
 
