@@ -1,8 +1,10 @@
-(function(window, document) {
+import util from './Util.js';
+
+(function(window, document, util) {
   let root = window,
       doc = document;
 
-  const DEBUG_CONTAINER_ID = 'debug-container';
+  const DEBUG_CONTAINER_ID = 'console-list';
 
   let logs = [];
 
@@ -16,56 +18,49 @@
 
     out[value] = (...args) => {
       if (loaded) {
-        let item = `<li class="debug-list-item ${ value }">${ args.toString() }</li>`;
+        let item = `<li class="console-list-item ${ value }">${ util.output(args) }</li>`;
         doc.getElementById(DEBUG_CONTAINER_ID).innerHTML += item;
 
       } else {
         logs.push({
           type: value,
-          msg: args
+          msg: args.length === 1 ? args[0] : args,
+          stack: ''
         });
       }
     };
 
     console[value] = (...args) => {
       console[`_${ value }`].apply(console, args);
-      out[value].apply(root, [...args]);
+      out[value].apply(root, args);
     };
   }
 
-  let addEventListener = function(target, event, func, flag=false) {
-    if (target.addEventListener) {
-      target.addEventListener(event, func, flag);
-    } else if (target.attachEvent) {
-      target.attachEvent(`on${ event }`, function() {
-        func.call(target);
-      });
-    } else {
-      target[`on${ event }`] = func;
-    }
-  }
-
-  addEventListener(root, 'load', function() {
+  util.addEventListener(root, 'load', function() {
     loaded = true;
 
     let log = null;
     while(log = logs.shift()) {
-      let { type, msg } = log;
-      out[type](msg);
+      console._log(log);
+      let { type, msg, stack } = log;
+      out[type](msg, stack);
     }
-    console.log(logs);
   });
 
-  addEventListener(root, 'error', function(event) {
-    let { message } = event;
+  util.addEventListener(root, 'error', function(event) {
+    let { message, error } = event;
+    let { stack } = error;
+
     if (loaded) {
-      out.error(message);
+      out.error(typeof message);
     } else {
+      console._log(message);
       logs.push({
         type: 'error',
-        msg: message
+        msg: message,
+        stack: `\n${ stack }`
       });
     }
   });
 
-})(window, document);
+})(window, document, util);

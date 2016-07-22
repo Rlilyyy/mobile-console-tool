@@ -1,21 +1,58 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="../dist/index.min.js"></script>
+
+    <script src="http://localhost:8080/webpack-dev-server.js"></script>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <title>test page</title>
     <style media="screen">
-      .error {
-        color: red;
+      body {
+        margin: 0;
       }
-      .warn {
-        color: yellow;
+      .debug-container .console-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 13px;
       }
-      .info {
-        color: green;
+
+      .debug-container .console-list .console-list-item {
+        padding: 5px 10px;
+        box-sizing: border-box;
+      }
+
+      .debug-container .console-list .log {
+        /*border-top: 1px solid #c9c9c9;*/
+        border-bottom: 1px solid #c9c9c9;
+        color: #0003ff;
+      }
+
+      .debug-container .console-list .error {
+        background-color: #fee1e1;
+        /*border-top: 1px solid #ff8b8b;*/
+        border-bottom: 1px solid #ff8b8b;
+        color: #ff3333;
+      }
+
+      .debug-container .console-list .warn {
+        background-color: #fffddd;
+        /*border-top: 1px solid #e9f14e;*/
+        border-bottom: 1px solid #e9f14e;
+        color: #595940;
+      }
+
+      .debug-container .console-list .info {
+        background-color: #daffcf;
+        /*border-top: 1px solid #9bff7d;*/
+        border-bottom: 1px solid #9bff7d;
+        color: #83c835;
       }
     </style>
-    <script src="../src/console.js"></script>
     <script type="text/javascript">
+      console.error('fuckkkk');
+      console.log(321);
       console.log(123);
       console.warn('www');
       console.info('fsssss');
@@ -24,8 +61,10 @@
     </script>
   </head>
   <body>
-    <div class="debug-container" id="debug-container">
+    <div class="debug-container">
+      <ul class="console-list" id="console-list">
 
+      </ul>
     </div>
   </body>
 </html>
