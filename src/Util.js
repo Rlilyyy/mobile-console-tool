@@ -4,10 +4,7 @@ let types = ['Object', 'Array', 'RegExp', 'Function', 'Number', 'Boolean', 'Symb
 
 class Util {
   constructor() {
-    this._log = console.log;
-    this._warn = console.warn;
-    this._info = console.info;
-    this._error = console.error;
+
   }
 
   toString() {
@@ -44,8 +41,24 @@ class Util {
     }
   }
 
-  log() {
-    
+  log(arg) {
+    this.appendLog(template.getLogTemplate(arg));
+  }
+
+  warn(arg) {
+    this.appendLog(template.getWarnTemplate(arg));
+  }
+
+  info(arg) {
+    this.appendLog(template.getInfoTemplate(arg));
+  }
+
+  error(arg) {
+    this.appendLog(template.getErrorTemplate(arg));
+  }
+
+  catchError(arg) {
+    // do something here
   }
 };
 

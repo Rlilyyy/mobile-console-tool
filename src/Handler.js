@@ -8,12 +8,34 @@ class Handler {
     return this.loaded;
   }
 
-  loaded() {
-    this.loaded = true;
-  }
-
   hasCache() {
     return this.caches.length > 0;
+  }
+
+  init() {
+    this.loadEventInit();
+    this.errorEventInit();
+  }
+
+  loadEventInit() {
+    util.addEventListener(window, 'load', () => {
+      this.loaded = true;
+      this.show();
+
+      this.triggleEventInit();
+    }, false);
+  }
+
+  errorEventInit() {
+    util.addEventListener(window, 'error', event => {
+      this.show('catchError', event);
+    }, false);
+  }
+
+  triggleEventInit() {
+    util.addEventListener(document.querySelector('#console-list'), 'click', () => {
+      // do something here
+    }, false);
   }
 
   show(type, args) {
@@ -33,6 +55,9 @@ class Handler {
   }
 
   showImmediately(type, args) {
+    // 原始 console 正常输出
+    console[`_${type}`].apply(console, args);
+
     args.forEach(arg => {
       this.showByType(type, arg);
     });
@@ -52,6 +77,9 @@ class Handler {
       case 'error':
         util.error(arg);
         break;
+      case 'catchError':
+        util.catchError(arg);
+        break;
     }
   }
 
@@ -61,3 +89,6 @@ class Handler {
     });
   }
 }
+
+let handler = new Handler();
+export default handler;
