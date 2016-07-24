@@ -66,19 +66,19 @@ class Handler {
   showByType(type, arg) {
     switch (type) {
       case 'log':
-        util.log(arg);
+        ex.log(arg);
         break;
       case 'warn':
-        util.warn(arg);
+        ex.warn(arg);
         break;
       case 'info':
-        util.info(arg);
+        ex.info(arg);
         break;
       case 'error':
-        util.error(arg);
+        ex.error(arg);
         break;
       case 'catchError':
-        util.catchError(arg);
+        ex.catchError(arg);
         break;
     }
   }

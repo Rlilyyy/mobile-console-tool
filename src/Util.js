@@ -11,7 +11,6 @@ class Util {
     return `Hello, there is ${ author }, looooooool= =`;
   }
 
-
   /**
    * 兼容性事件添加，attachEvent 无法接收 event 参数，并且 this 被绑定在 window 上，所以需要指定
    * @param  {Object} target     添加事件目标节点
@@ -39,26 +38,6 @@ class Util {
         target[`on${ event }`] = func;
       }
     }
-  }
-
-  log(arg) {
-    this.appendLog(template.getLogTemplate(arg));
-  }
-
-  warn(arg) {
-    this.appendLog(template.getWarnTemplate(arg));
-  }
-
-  info(arg) {
-    this.appendLog(template.getInfoTemplate(arg));
-  }
-
-  error(arg) {
-    this.appendLog(template.getErrorTemplate(arg));
-  }
-
-  catchError(arg) {
-    // do something here
   }
 };
 
