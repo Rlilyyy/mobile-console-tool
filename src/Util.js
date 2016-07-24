@@ -4,7 +4,10 @@ let types = ['Object', 'Array', 'RegExp', 'Function', 'Number', 'Boolean', 'Symb
 
 class Util {
   constructor() {
-
+    this._log = console.log;
+    this._warn = console.warn;
+    this._info = console.info;
+    this._error = console.error;
   }
 
   toString() {
@@ -20,7 +23,7 @@ class Util {
    * @param  {Boolean} flag=false 事件是否在捕获阶段获取，默认为 false，仅在支持原生 addEventListener 的浏览器下有效
    * @return {void}
    */
-  addEventListener(target, event, func, flag=false) {
+  static addEventListener(target, event, func, flag=false) {
     if (target.addEventListener) {
       target.addEventListener(event, func, flag);
     } else if (target.attachEvent) {
@@ -41,29 +44,14 @@ class Util {
     }
   }
 
-  output(args) {
-    let outputs = '';
-    args.forEach(arg => {
-
-      if (this.isObject(arg) || this.isArray(arg)) {
-        outputs += JSON.stringify(arg);
-      } else if (this.isRegExp(arg) || this.isFunction(arg) || this.isSymbol(arg)) {
-        outputs += arg.toString();
-      } else {
-        outputs += arg;
-      }
-
-    });
-    return outputs;
+  log() {
+    
   }
 };
 
 types.forEach(type => {
-  Util.prototype[`is${ type }`] = (function(type) {
-    return function(obj) {
-      return Object.prototype.toString.call(obj) === `[object ${ type }]`;
-    }
-  })(type);
+  let func = obj => { return Object.prototype.toString.call(obj) === `[object ${ type }]`; };
+  Util.prototype[`is${ type }`] = func;
 });
 
 let util = new Util();
