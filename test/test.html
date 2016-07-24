@@ -20,7 +20,9 @@
 
       .debug-container .console-list .console-list-item {
         padding: 5px 10px;
+        line-height: 18px;
         box-sizing: border-box;
+        position: relative;
       }
 
       .debug-container .console-list .log {
@@ -36,6 +38,30 @@
         color: #ff3333;
       }
 
+      .debug-container .console-list .close:after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 13px;
+        right: 15px;
+        width: 0;
+        height: 0;
+        border: 5px solid black;
+        border-color: black transparent transparent transparent;
+      }
+
+      .debug-container .console-list .open:after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 8px;
+        right: 15px;
+        width: 0;
+        height: 0;
+        border: 5px solid black;
+        border-color: transparent transparent black transparent;
+      }
+
       .debug-container .console-list .warn {
         background-color: #fffddd;
         /*border-top: 1px solid #e9f14e;*/
@@ -49,22 +75,47 @@
         border-bottom: 1px solid #9bff7d;
         color: #83c835;
       }
+
+      .debug-container .console-list .close .stack {
+        display: none;
+      }
+
+      .debug-container .console-list .open .stack {
+        display: block;
+      }
+
+      /*.div {
+        padding: 50px;
+      }
+      .div .span {
+        padding: 0 5px;
+        border: 1px solid rgb(180, 244, 102);
+        height: 25px;
+        line-height: 25px;
+        box-sizing: border-box;
+        display: inline-block;
+      }*/
     </style>
     <script type="text/javascript">
       console.error('fuckkkk');
-      console.log(321);
-      console.log(123);
-      console.warn('www');
-      console.info('fsssss');
+      // console.log(321);
+      // console.log(123);
+      // console.warn('www');
+      // console.info('fsssss');
       throw Error('saokpd');
-      console.error('12322222');
+      // console.error('12322222');
     </script>
   </head>
   <body>
+
     <div class="debug-container">
       <ul class="console-list" id="console-list">
 
       </ul>
     </div>
+<!--
+    <div class="div">
+      <span class="span">新</span>
+    </div> -->
   </body>
 </html>

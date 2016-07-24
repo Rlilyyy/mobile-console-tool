@@ -18,7 +18,7 @@ import util from './Util.js';
 
     out[value] = (...args) => {
       if (loaded) {
-        let item = `<li class="console-list-item ${ value }">${ util.output(args) }</li>`;
+        let item = `<li class="console-list-item ${ value } ${ value === 'error' ? 'close' : '' }">${ util.output(args) }</li>`;
         doc.getElementById(DEBUG_CONTAINER_ID).innerHTML += item;
 
       } else {
@@ -37,13 +37,26 @@ import util from './Util.js';
   }
 
   util.addEventListener(root, 'load', function() {
+
+    util.addEventListener(doc.getElementById(DEBUG_CONTAINER_ID), 'click', function(event) {
+      let e = event || window.event;
+      let target = e.target || e.srcElement;
+
+      let className = target.className;
+
+      if (/close/.test(target.className)) {
+        target.className = className.replace(/close/, 'open');
+      } else if (/open/.test(target.className)) {
+        target.className = className.replace(/open/, 'close');
+      }
+    }, false);
+
     loaded = true;
 
     let log = null;
     while(log = logs.shift()) {
-      console._log(log);
       let { type, msg, stack } = log;
-      out[type](msg, stack);
+      out[type](msg + stack);
     }
   });
 
@@ -51,16 +64,28 @@ import util from './Util.js';
     let { message, error } = event;
     let { stack } = error;
 
+    let stackPath = stack.split(/\n/);
+    let errorStack = '';
+    stackPath.forEach((path, idx) => {
+      if (idx > 0) {
+        errorStack += `<div class="stack" style="padding-left: 15px">${ path }</div>`;
+      } else {
+        errorStack += `<div class="stack">${ path }</div>`;
+      }
+    });
+
+
     if (loaded) {
       out.error(typeof message);
     } else {
-      console._log(message);
       logs.push({
         type: 'error',
         msg: message,
-        stack: `\n${ stack }`
+        stack: errorStack
       });
     }
   });
+
+
 
 })(window, document, util);
